@@ -71,7 +71,7 @@ public class HomeActivity extends AppCompatActivity {
 
         for (BluetoothDevice device : bondedDevices)
             if (device.getAddress().equals(DEVICE_ADDRESS))
-                connectDeviceToScoket(device);
+                connectDeviceToSocket(device);
     }
 
     private void askUserToTurnOnBluetooth() {
@@ -79,8 +79,8 @@ public class HomeActivity extends AppCompatActivity {
         startActivityForResult(enableAdapter, 0);
     }
 
-    private void connectDeviceToScoket(BluetoothDevice device) throws IOException {
-        final UUID portUUID = new UUID(0, 0);
+    private void connectDeviceToSocket(BluetoothDevice device) throws IOException {
+        final UUID portUUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
 
         BluetoothSocket socket = device.createRfcommSocketToServiceRecord(portUUID);
         socket.connect();
