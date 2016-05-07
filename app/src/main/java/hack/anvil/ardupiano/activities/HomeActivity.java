@@ -10,7 +10,6 @@ import android.widget.Toast;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.Set;
 import java.util.UUID;
 
@@ -20,7 +19,6 @@ import hack.anvil.ardupiano.exceptions.BluetoothNotFoundException;
 
 public class HomeActivity extends AppCompatActivity {
 
-    private OutputStream bluetoothOutputStream = null;
     private InputStream bluetoothInputStream = null;
 
     @Override
@@ -30,7 +28,7 @@ public class HomeActivity extends AppCompatActivity {
 
         initializeBluetooth();
 
-        new BluetoothThread(bluetoothInputStream, bluetoothOutputStream).run();
+        new BluetoothThread(bluetoothInputStream).run();
     }
 
     private void initializeBluetooth() {
@@ -88,7 +86,6 @@ public class HomeActivity extends AppCompatActivity {
         BluetoothSocket socket = device.createRfcommSocketToServiceRecord(portUUID);
         socket.connect();
 
-        bluetoothOutputStream = socket.getOutputStream();
         bluetoothInputStream = socket.getInputStream();
     }
 
