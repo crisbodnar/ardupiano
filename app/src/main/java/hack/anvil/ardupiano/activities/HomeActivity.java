@@ -6,6 +6,7 @@ import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 
 import java.io.IOException;
@@ -67,7 +68,7 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void bindDevice(Set<BluetoothDevice> bondedDevices) throws IOException {
-        final String DEVICE_ADDRESS = "";
+        final String DEVICE_ADDRESS = "20:15:07:27:86:55";
 
         for (BluetoothDevice device : bondedDevices)
             if (device.getAddress().equals(DEVICE_ADDRESS))
