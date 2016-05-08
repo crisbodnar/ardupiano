@@ -16,6 +16,7 @@ import java.util.UUID;
 import hack.anvil.ardupiano.R;
 import hack.anvil.ardupiano.connections.BluetoothThread;
 import hack.anvil.ardupiano.exceptions.BluetoothNotFoundException;
+import hack.anvil.ardupiano.sounds.PlaySound;
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -26,9 +27,13 @@ public class HomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        initializeBluetooth();
+        //initializeBluetooth();
 
-        new BluetoothThread(bluetoothInputStream).run();
+        //new BluetoothThread(bluetoothInputStream).run();
+
+        PlaySound sound = new PlaySound(400.0);
+        sound.onResume();
+
     }
 
     private void initializeBluetooth() {
