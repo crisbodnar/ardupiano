@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 
+import java.util.Arrays;
 import java.util.concurrent.BlockingQueue;
 
 import hack.anvil.ardupiano.R;
@@ -77,11 +78,10 @@ public class PlaySound implements Runnable {
                 AudioTrack.MODE_STATIC);
         audioTrack.write(generatedSnd, 0, generatedSnd.length);
         if(audioTrack.getState() != AudioTrack.STATE_UNINITIALIZED) {
-            final byte[] wave = getSoundWave(audioTrack);
             homeActivity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    visualizerView.updateVisualizer(wave);
+                    visualizerView.updateVisualizer(Arrays.copyOfRange(generatedSnd, 0, generatedSnd.length/16));
                 }
             });
             audioTrack.play();
@@ -92,15 +92,5 @@ public class PlaySound implements Runnable {
             }
             audioTrack.release();
         }
-    }
-
-    public byte[] getSoundWave(AudioTrack track) {
-        Visualizer visualizer = new Visualizer(track.getAudioSessionId());
-        visualizer.setEnabled(true);
-        visualizer.setCaptureSize(Visualizer.getCaptureSizeRange()[1]);
-        byte[] result = new byte[0];
-        visualizer.getWaveForm(result);
-        visualizer.release();
-        return result;
     }
 }
