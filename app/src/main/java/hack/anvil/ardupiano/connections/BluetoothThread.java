@@ -32,7 +32,8 @@ public class BluetoothThread implements Runnable {
                 dataInputStream.readFully(bluetoothDataBuffer, 0, bluetoothDataBuffer.length);
                 logDataToDebugConsole(bluetoothDataBuffer);
                 Double currentNote = bluetoothInputNoteMap.get(new String(bluetoothDataBuffer, "UTF-8"));
-                notesQueue.put(currentNote);
+                if(notesQueue.remainingCapacity() != 0)
+                    notesQueue.put(currentNote);
             } catch (IOException e) {
                 break;
             } catch (InterruptedException e) {

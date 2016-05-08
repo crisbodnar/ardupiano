@@ -6,12 +6,13 @@ import android.media.AudioManager;
 import android.media.AudioTrack;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 
 import java.util.concurrent.BlockingQueue;
 
 import hack.anvil.ardupiano.R;
 
-public class PlaySound implements Runnable{
+public class PlaySound implements Runnable {
     // originally from http://marblemice.blogspot.com/2010/04/generate-and-play-tone-in-android.html
     // and modified by Steve Pomeroy <steve@staticfree.info>
     private final int duration = 1; // seconds
@@ -25,17 +26,17 @@ public class PlaySound implements Runnable{
     Handler handler = new Handler();
     public final BlockingQueue<Double> queue;
 
-    public PlaySound(BlockingQueue<Double> queue)
-    {
+    public PlaySound(BlockingQueue<Double> queue) {
         this.queue = queue;
     }
 
     @Override
     public void run() {
-        while(true) {
-            if (queue.peek() != null)
+        while (true) {
+            if (!queue.isEmpty()) {
                 freqOfTone = queue.remove();
-            else
+                Log.d("PlaySound", "Deque value: " + freqOfTone);
+            } else
                 continue;
 
             genTone();
@@ -43,10 +44,10 @@ public class PlaySound implements Runnable{
         }
     }
 
-    private void genTone(){
+    private void genTone() {
         // fill out the array
         for (int i = 0; i < numSamples; ++i) {
-            sample[i] = Math.sin(2 * Math.PI * i / (sampleRate/freqOfTone));
+            sample[i] = Math.sin(2 * Math.PI * i / (sampleRate / freqOfTone));
         }
 
         // convert to 16 bit pcm sound array
@@ -62,13 +63,21 @@ public class PlaySound implements Runnable{
         }
     }
 
-    public synchronized void playSound(){
+    public synchronized void playSound() {
 
         final AudioTrack audioTrack = new AudioTrack(AudioManager.STREAM_MUSIC,
-                sampleRate, AudioFormat.CHANNEL_OUT_MONO,
+                sampleRate, AudioFormat.CHANNEL_OUT_SURROUND,
                 AudioFormat.ENCODING_PCM_16BIT, generatedSnd.length,
                 AudioTrack.MODE_STATIC);
         audioTrack.write(generatedSnd, 0, generatedSnd.length);
-        audioTrack.play();
+        if(audioTrack.getState() != AudioTrack.STATE_UNINITIALIZED) {
+            audioTrack.play();
+            try {
+                this.wait(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            audioTrack.release();
+        }
     }
 }
