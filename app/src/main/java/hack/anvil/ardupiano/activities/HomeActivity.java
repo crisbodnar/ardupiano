@@ -19,6 +19,7 @@ import hack.anvil.ardupiano.R;
 import hack.anvil.ardupiano.connections.BluetoothThread;
 import hack.anvil.ardupiano.exceptions.BluetoothNotFoundException;
 import hack.anvil.ardupiano.sounds.PlaySound;
+import hack.anvil.ardupiano.views.VisualizerView;
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -29,12 +30,14 @@ public class HomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
+        VisualizerView visualizerView = (VisualizerView) findViewById(R.id.visualizerview);
+
         initializeBluetooth();
 
         BlockingQueue<Double> notesQueue = new ArrayBlockingQueue<>(1024);
 
         new Thread(new BluetoothThread(bluetoothInputStream, notesQueue)).start();
-        new Thread(new PlaySound(notesQueue)).start();
+        new Thread(new PlaySound(notesQueue, this, visualizerView)).start();
     }
 
     private void initializeBluetooth() {

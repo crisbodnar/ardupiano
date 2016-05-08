@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.media.AudioFormat;
 import android.media.AudioManager;
 import android.media.AudioTrack;
+import android.media.audiofx.Visualizer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -11,6 +12,7 @@ import android.util.Log;
 import java.util.concurrent.BlockingQueue;
 
 import hack.anvil.ardupiano.R;
+import hack.anvil.ardupiano.views.VisualizerView;
 
 public class PlaySound implements Runnable {
     // originally from http://marblemice.blogspot.com/2010/04/generate-and-play-tone-in-android.html
@@ -23,11 +25,15 @@ public class PlaySound implements Runnable {
 
     private final byte generatedSnd[] = new byte[2 * numSamples];
 
-    Handler handler = new Handler();
     public final BlockingQueue<Double> queue;
 
-    public PlaySound(BlockingQueue<Double> queue) {
+    public VisualizerView visualizerView;
+    public Activity homeActivity;
+
+    public PlaySound(BlockingQueue<Double> queue, Activity activity, VisualizerView vview) {
         this.queue = queue;
+        homeActivity = activity;
+        visualizerView = vview;
     }
 
     @Override
@@ -71,6 +77,13 @@ public class PlaySound implements Runnable {
                 AudioTrack.MODE_STATIC);
         audioTrack.write(generatedSnd, 0, generatedSnd.length);
         if(audioTrack.getState() != AudioTrack.STATE_UNINITIALIZED) {
+            final byte[] wave = getSoundWave(audioTrack);
+            homeActivity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    visualizerView.updateVisualizer(wave);
+                }
+            });
             audioTrack.play();
             try {
                 this.wait(1000);
@@ -79,5 +92,15 @@ public class PlaySound implements Runnable {
             }
             audioTrack.release();
         }
+    }
+
+    public byte[] getSoundWave(AudioTrack track) {
+        Visualizer visualizer = new Visualizer(track.getAudioSessionId());
+        visualizer.setEnabled(true);
+        visualizer.setCaptureSize(Visualizer.getCaptureSizeRange()[1]);
+        byte[] result = new byte[0];
+        visualizer.getWaveForm(result);
+        visualizer.release();
+        return result;
     }
 }
