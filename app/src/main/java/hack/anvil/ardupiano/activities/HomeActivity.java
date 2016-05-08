@@ -18,6 +18,7 @@ import java.util.concurrent.BlockingQueue;
 import hack.anvil.ardupiano.R;
 import hack.anvil.ardupiano.connections.BluetoothThread;
 import hack.anvil.ardupiano.exceptions.BluetoothNotFoundException;
+import hack.anvil.ardupiano.sounds.PlaySound;
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -32,7 +33,8 @@ public class HomeActivity extends AppCompatActivity {
 
         BlockingQueue<Double> notesQueue = new ArrayBlockingQueue<>(1024);
 
-        new BluetoothThread(bluetoothInputStream, notesQueue).run();
+        new Thread(new BluetoothThread(bluetoothInputStream, notesQueue)).start();
+        new Thread(new PlaySound(notesQueue)).start();
     }
 
     private void initializeBluetooth() {
