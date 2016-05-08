@@ -49,13 +49,13 @@ public class BluetoothThread implements Runnable {
     private Map<Integer, Double> getNotesMap() {
         Map<Integer, Double> bluetoothInputNoteMap = new HashMap<>();
 
-        bluetoothInputNoteMap.put(1, 1.0);
-        bluetoothInputNoteMap.put(2, 1.0);
-        bluetoothInputNoteMap.put(3, 1.0);
-        bluetoothInputNoteMap.put(4, 1.0);
-        bluetoothInputNoteMap.put(5, 1.0);
-        bluetoothInputNoteMap.put(6, 1.0);
-        bluetoothInputNoteMap.put(7, 1.0);
+        bluetoothInputNoteMap.put(1, 220.0);
+        bluetoothInputNoteMap.put(2, 237.0);
+        bluetoothInputNoteMap.put(3, 262.0);
+        bluetoothInputNoteMap.put(4, 294.0);
+        bluetoothInputNoteMap.put(5, 330.0);
+        bluetoothInputNoteMap.put(6, 349.0);
+        bluetoothInputNoteMap.put(7, 392.0);
 
         return bluetoothInputNoteMap;
     }
