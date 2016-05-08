@@ -16,7 +16,7 @@ public class PlaySound implements Runnable {
     // originally from http://marblemice.blogspot.com/2010/04/generate-and-play-tone-in-android.html
     // and modified by Steve Pomeroy <steve@staticfree.info>
     private final int duration = 1; // seconds
-    private final int sampleRate = 8000;
+    private final int sampleRate = 4000;
     private final int numSamples = duration * sampleRate;
     private final double sample[] = new double[numSamples];
     private double freqOfTone; // hz
