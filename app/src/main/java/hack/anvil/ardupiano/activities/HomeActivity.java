@@ -12,6 +12,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
 
 import hack.anvil.ardupiano.R;
 import hack.anvil.ardupiano.connections.BluetoothThread;
@@ -28,7 +30,9 @@ public class HomeActivity extends AppCompatActivity {
 
         initializeBluetooth();
 
-        new BluetoothThread(bluetoothInputStream).run();
+        BlockingQueue<Double> notesQueue = new ArrayBlockingQueue<>(1024);
+
+        new BluetoothThread(bluetoothInputStream, notesQueue).run();
     }
 
     private void initializeBluetooth() {
